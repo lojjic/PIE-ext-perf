@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <!--
+        This file tests standalone buttons using a lighter markup structure plus CSS3 styling.
+        Four "panels" are created, and a number of buttons are inserted into each. PIE is then
+        attached to each button to handle rendering its CSS3 styles.
+    -->
+
+    <meta content="text/html; charset=UTF-8" http-equiv="content-type">
+    <title></title>
+
+    <link rel="stylesheet" href="ext-all.css" />
+
+    <style type="text/css">
+        .test-panel {
+            float: left;
+            border: 1px solid #99BBE8;
+            width: 400px;
+            padding: 12px;
+            margin: 12px;
+            position: relative;
+        }
+
+        .css3-btn {
+            color:#333333;
+            font:11px arial,tahoma,verdana,helvetica;
+            position: relative;
+            cursor: pointer;
+            float: left;
+            margin: 4px 6px;
+            border: 0;
+            -webkit-border-radius: 1px;
+            -moz-border-radius: 1px;
+            border-radius: 1px;
+            -webkit-box-shadow: #FFF 0 0 0 1px, #9f9f9f 0 0 0 2px;
+            -moz-box-shadow: #FFF 0 0 0 1px, #9f9f9f 0 0 0 2px;
+            box-shadow: #FFF 0 0 0 1px, #9f9f9f 0 0 0 2px;
+            background: #f7f7f7;
+            background: -webkit-gradient(linear, 0 0, 0 100%, from(#f7f7f7), color-stop(.6, #f1f1f1), color-stop(.61, #dadada), to(#dfdfdf));
+            background: -moz-linear-gradient(#f7f7f7, #f1f1f1 60%, #dadada 61%, #dfdfdf);
+            background: linear-gradient(#f7f7f7, #f1f1f1 60%, #dadada 61%, #dfdfdf);
+            -pie-background: linear-gradient(#f7f7f7, #f1f1f1 60%, #dadada 61%, #dfdfdf);
+        }
+
+        .x-toolbar .css3-btn {
+            background: none;
+            -pie-background: none;
+            -webkit-box-shadow: none;
+            -moz-box-shadow: none;
+            box-shadow: none;
+            -webkit-border-radius: 0;
+            -moz-border-radius: 0;
+            border-radius: 0;
+        }
+
+        .css3-btn button {
+            color:#333333;
+            font:11px arial,tahoma,verdana,helvetica;
+            padding: 2px 6px;
+            border: 0;
+            background: none;
+            cursor: pointer;
+            overflow: visible;
+        }
+
+        .css3-btn ::-moz-focus-inner {
+            border: 0;
+            padding: 0;
+        }
+
+        .test-panel .css3-btn-over {
+            -webkit-border-radius: 1px;
+            -moz-border-radius: 1px;
+            border-radius: 1px;
+            -webkit-box-shadow: #F7FFFF 0 0 0 1px, #AAC8F1 0 0 0 2px;
+            -moz-box-shadow: #F7FFFF 0 0 0 1px, #AAC8F1 0 0 0 2px;
+            box-shadow: #F7FFFF 0 0 0 1px, #AAC8F1 0 0 0 2px;
+            background: #E4F3FF;
+            background: -webkit-gradient(linear, 0 0, 0 100%, from(#E4F3FF), color-stop(.6, #D8EDFF), color-stop(.61, #C2D8F2), to(#C6DCF6));
+            background: -moz-linear-gradient(#E4F3FF, #D8EDFF 60%, #C2D8F2 61%, #C6DCF6);
+            background: linear-gradient(#E4F3FF, #D8EDFF 60%, #C2D8F2 61%, #C6DCF6);
+            -pie-background: linear-gradient(#E4F3FF, #D8EDFF 60%, #C2D8F2 61%, #C6DCF6);
+        }
+    </style>
+
+    <script type="text/javascript">
+        function log( txt ) {
+//            return;
+            var el = log._el;
+            if(!el) {
+                el =log._el = document.createElement( 'div' );
+                el.style.position = 'absolute';
+                el.style.bottom = '1em';
+                el.style.right = '1em';
+                el.style.width = '200px';
+                el.style.height = '100px';
+                el.style.overflow = 'auto';
+                el.style.background = '#FFF';
+                el.style.border = '1px solid #EEE';
+                el.style.fontSize = '9px';
+                document.body.appendChild( el );
+            }
+            var item = document.createElement( 'div' );
+            item.appendChild( document.createTextNode( txt ) );
+            el.appendChild( item )
+        }        
+    </script>
+
+    <!--[if lt IE 9]>
+    <script type="text/javascript" src="../PIE_uncompressed.js"></script>
+    <![endif]-->
+
+    <script type="text/javascript">
+    (function() {
+        var tableRe = /^table|tbody|tr|td$/i,
+            endRe = /end/i,
+            afterbegin = 'afterbegin',
+            afterend = 'afterend',
+            beforebegin = 'beforebegin',
+            beforeend = 'beforeend',
+            hoverClass = 'css3-btn-over',
+            removeHoverClassRe = /\bcss3-btn-over\b/g;
+
+
+        /**
+         * Yanked from Ext DomHelper
+         * Inserts an HTML fragment into the DOM.
+         * @param {String} where Where to insert the html in relation to el - beforeBegin, afterBegin, beforeEnd, afterEnd.
+         * @param {HTMLElement} el The context element
+         * @param {String} html The HTML fragment
+         * @return {HTMLElement} The new node
+         */
+        function insertHtml(where, el, html){
+            var hash = {},
+                hashVal,
+                setStart,
+                range,
+                frag,
+                rangeEl,
+                rs;
+
+            where = where.toLowerCase();
+            // add these here because they are used in both branches of the condition.
+            hash[beforebegin] = ['BeforeBegin', 'previousSibling'];
+            hash[afterend] = ['AfterEnd', 'nextSibling'];
+
+            if (el.insertAdjacentHTML) {
+                if(tableRe.test(el.tagName) && (rs = insertIntoTable(el.tagName.toLowerCase(), where, el, html))){
+                    return rs;
+                }
+                // add these two to the hash.
+                hash[afterbegin] = ['AfterBegin', 'firstChild'];
+                hash[beforeend] = ['BeforeEnd', 'lastChild'];
+                if ((hashVal = hash[where])) {
+                    el.insertAdjacentHTML(hashVal[0], html);
+                    return el[hashVal[1]];
+                }
+            } else {
+                range = el.ownerDocument.createRange();
+                setStart = 'setStart' + (endRe.test(where) ? 'After' : 'Before');
+                if (hash[where]) {
+                    range[setStart](el);
+                    frag = range.createContextualFragment(html);
+                    el.parentNode.insertBefore(frag, where == beforebegin ? el : el.nextSibling);
+                    return el[(where == beforebegin ? 'previous' : 'next') + 'Sibling'];
+                } else {
+                    rangeEl = (where == afterbegin ? 'first' : 'last') + 'Child';
+                    if (el.firstChild) {
+                        range[setStart](el[rangeEl]);
+                        frag = range.createContextualFragment(html);
+                        if(where == afterbegin){
+                            el.insertBefore(frag, el.firstChild);
+                        }else{
+                            el.appendChild(frag);
+                        }
+                    } else {
+                        el.innerHTML = html;
+                    }
+                    return el[rangeEl];
+                }
+            }
+            throw 'Illegal insertion point -> "' + where + '"';
+        }
+
+
+
+        window.onload = function() {
+            var numPanels = 4,
+                numButtons = 25,
+                buttonMarkup = '<span class="css3-btn"><button type="button">Button</button></span>';
+
+            for( var i = 0; i < numPanels; i++ ) {
+                var panel = document.createElement( 'div' );
+                panel.className = 'test-panel';
+                document.body.appendChild( panel );
+                for( var j = 0; j < numButtons; j++ ) {
+                    var button = insertHtml( 'beforeend', panel, buttonMarkup );
+                    button.onmouseover = function() {
+                        this.className += ' ' + hoverClass;
+                    };
+                    button.onmouseout = function() {
+                        this.className = this.className.replace( removeHoverClassRe, '' );
+                    };
+//                    if('PIE' in window) setTimeout(function(){PIE.attach( button )},0);
+                    if('PIE' in window) PIE.attach( button );
+                }
+            }
+        }
+
+    })();
+    </script>
+
+</head>
+<body>
+
+
+</body>
+</html>
